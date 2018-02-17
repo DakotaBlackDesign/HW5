@@ -9,7 +9,7 @@ function setup() {
       y: random(height), //starting y
       Ya: random(0,20),
       Xa: random(-0.2,3), //starting x velocity
-      t:0, //current time 
+      t: millis(), //current time 
       t1:0, //starting time 
 			d: random(5,10), // diameter
     }
