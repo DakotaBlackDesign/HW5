@@ -1,48 +1,40 @@
-
-var drops = [];
+var drops = []; //create array of drop objects
 
 function setup() {
   createCanvas(400, 400);
   colorMode(HSB)
-	for (var index = 0; index < 6; index = index + 1){
-		drops[index] = {
-			x: 230,
-			y: 220,
-			yspeed: 3*random(1,1.4),
-			xspeed: 1*random(-1,2),
-			t:1 
-		}
-	}
-	
+  for (var index = 0; index < 100; index = index + 1){// add drops to array
+    drops[index] = {
+      x: 100,  //starting x
+      y: random(height), //starting y
+      Ya: random(0,20),
+      Xa: random(-0.2,3), //starting x velocity
+      t:0, //current time 
+      t1:0, //starting time 
+			d: random(5,10), // diameter
+    }
+  }
 }
-  
+
 function draw() {
   background(0);
   noStroke();
+  rect(0, 50, 100, 20);// draw pipe
 
-  // draw pipe
-  rect(0, 200, 230, 20);
-  
-	for (var index = 0; index < 6; index = index + 1) {
-		var drop = drops[index]
+  for (var index = 0; index < 100; index = index + 1) {
+    var drop = drops[index]
+    
+    ellipse(drop.x, drop.y, drop.d,drop.d*drop.t/1000);// draw drip
 
-  // draw drip
-  ellipse(drop.x, drop.y, 10);
-  
-  // down 3 pixels each frame, but maybe should be accelerating?
-  drop.y = drop.y + drop.yspeed*drop.t
-	drop.t = drop.t + 0.04
-	drop.x = drop.x + drop.xspeed
-	drop.xspeed = drop.xspeed  
-		
-  print(drop.y)
-  // if invisible for a full “height” amount…
-  if (drop.y > height*2) {
-    // reset
-    drop.y = 220;
-		drop.t = 1
-		drop.x = 230
-		
-	}
+    drop.t = millis() - drop.t1 // time drop has been falling 
+		drop.Ya =map(drop.d,5,15,1,1.5)*(1/2 * 8.9 * sq(drop.t/1000))
+		drop.y = drop.y+ drop.Ya
+    drop.x = drop.x + drop.Xa
+
+    if (drop.y > height) { // reset
+      drop.y = 60;       // set to pipe location
+      drop.x = 100       
+      drop.t1 = millis() // set t1 to current time elapsed
+    }
   }
 }
