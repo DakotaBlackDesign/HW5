@@ -17,7 +17,7 @@ var freqB = 10;
 var freqC = 32.7;
 var freqD = 38.89;
 var fft, filter,myPart;
-
+var bpm = 60
 var note
 var notePat = [];
 
@@ -31,7 +31,7 @@ function setup() {
 	
   myPart = new p5.Part();
   myPart.addPhrase(notePhrase);
-  myPart.setBPM(140);
+  myPart.setBPM(bpm);
   masterVolume(0.4);
 	
   env = new p5.Env();
@@ -91,13 +91,14 @@ function draw() {
   background(0);
   netfreq = freqA*oct
 // Map varibles to mouse coordinates
-  var freqA1 = map(mouseX, 0, width, 1/10, 1); // pitch factor according to mouse up/down 
+  var bpm = map(mouseX, 0, width, 10, 400); // pitch factor according to mouse up/down 
   var freqB = map(mouseY, height, 0, 1/8, 2); // wobble factor
   var wob = map(mouseY, height, 0, 1, 50); // wobble range sellector
   var raz = map(mouseX, 0, width, 0, 5); // resolution range sellector
   oscB.freq(freqB)
-  oscD.freq(netfreq*freqA1) //pitch the oscillator frequency up and down acording to factor freqA1
-  oscA.freq(netfreq*freqA1)
+  oscD.freq(netfreq) //pitch the oscillator frequency up and down acording to factor freqA1
+  oscA.freq(netfreq)
+	myPart.setBPM(bpm);
 	
   var level = amplitude.getLevel(); //get the amplitude of oscillator oscB
   var resolution = map(level, 0, 1, 0, raz); //remap ocsilator amplitude to a range acceptable for modulating LowPass filter resolution
@@ -143,6 +144,7 @@ function keyPressed() { // change the key
 		myPart.start();
 	}
 	if (key == 'T') {
+		notePat.length = 0
 		myPart.stop();
 	}
 	
@@ -196,7 +198,8 @@ function keyPressed() { // change the key
     oct = oct/2
 	}
 	
-    print (netfreq)
+    print (freqA)
+		print (oct)
 }	
 function keyReleased() {
 	if (key == 'A') {
@@ -224,4 +227,3 @@ function keyReleased() {
     env.triggerRelease();
 	}
 }
-	
